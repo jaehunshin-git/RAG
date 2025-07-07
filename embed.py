@@ -26,8 +26,9 @@ question = "커피"
 question_vector = embed_text(question)
 print(f"{question} => {len(question_vector)} 차원 : {question_vector[:2]}")
 
+import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-similarity_list = cosine_similarity([question_vector], vector_list)[0]
+similarity_list = cosine_similarity(np.array([question_vector]), np.array(vector_list))[0]
 
 for text, similarity in zip(text_list, similarity_list):
     print(text, similarity)
