@@ -2,6 +2,10 @@ from typing import List, Dict
 from pprint import pprint
 from langchain_core.documents import Document
 import openai
+import environ
+
+env = environ.Env()
+environ.Env.read_env(overwrite=True)  # .env 파일을 환경변수로 로딩합니다.
 
 client = openai.Client()
 
