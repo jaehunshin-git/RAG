@@ -1,5 +1,5 @@
-import openai
 import environ
+import openai
 
 env = environ.Env() # 환경변수 설정을 위한 객체 생성
 environ.Env.read_env() # .env 파일을 읽어 환경변수 설정
@@ -43,7 +43,7 @@ def make_ai_message(question: str) -> str:
 
 
 def main():
-    with open("cafe_menu.txt", "r", encoding="utf-8") as file:
+    with open("data/cafe_menu.txt", "r", encoding="utf-8") as file:
         knowledge = file.read()    
     
     question = f"""

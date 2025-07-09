@@ -1,9 +1,17 @@
-from typing import List
+import sys
+from pathlib import Path
 from pprint import pprint
+from typing import List
+
 from langchain_core.documents import Document
 
+project_root = str(Path(__file__).resolve().parent.parent)
+sys.path.append(project_root)
+
+from config import CAFE_MENU_FILE
+
 def load() -> List[Document]:
-    file_path = r'C:\Users\JHSHIN\ProgrammingCodes\RAG\cafe_menu.txt'
+    file_path = CAFE_MENU_FILE
     with open(file_path, 'r', encoding='utf-8') as file:
         knowledge = file.read()
     
