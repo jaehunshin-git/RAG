@@ -1,11 +1,18 @@
 import pickle
+import sys
 from pathlib import Path
 from typing import List
 
-import numpy as np
 import openai
-from langchain_community.utils.math import cosine_similarity
 from langchain_core.documents import Document
+
+project_root = str(Path(__file__).resolve().parent.parent)
+sys.path.append(project_root)
+from config import CAFE_MENU_FILE
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # OpenAI 클라이언트 초기화
 client = openai.Client()
@@ -15,13 +22,13 @@ def load() -> List[Document]:
     1단계: 문서 로딩
     - 텍스트 파일을 읽어서 Document 객체로 변환
     """
-    file_path = "빽다방.txt"
-    지식: str = open(file_path, "rt", encoding="utf-8").read()
+    file_path = CAFE_MENU_FILE
+    knowledge: str = open(file_path, "rt", encoding="utf-8").read()
     docs = [
         Document(
             # 의미있는 메타데이터가 있다면, 맘껏 더 담으시면 됩니다.
             metadata={"source": file_path},
-            page_content=지식,
+            page_content=knowledge,
         )
     ]
     return docs
@@ -104,11 +111,12 @@ def main():
     메인 실행 함수
     - 벡터 저장소 생성 또는 로딩 후 사용
     """
-    vector_store_path = Path("vector_store.pickle")
+    vector_store_path = Path(project_root) / "4-store" / "data" / "vector_store.pickle"
 
     # 지정 경로에 파일이 없으면
     # 문서를 로딩하고 분할하여 벡터 데이터를 생성하고 해당 경로에 저장합니다.
     if not vector_store_path.is_file():
+        print("if not 문 진입")
         # 1단계: 문서 로딩
         doc_list = load()
         print(f"loaded {len(doc_list)} documents")
@@ -126,6 +134,7 @@ def main():
 
     # 지정 경로에 파일이 있으면, 로딩하여 VectorStore 객체를 복원합니다.
     else:
+        print("else 문 진입")
         vector_store = VectorStore.load(vector_store_path)
         print(f"loaded {len(vector_store)} items in vector store")
 

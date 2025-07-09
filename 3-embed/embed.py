@@ -1,10 +1,9 @@
-from typing import List, Dict
+from typing import List
+
 import openai
-import environ
+from dotenv import load_dotenv
 
-env = environ.Env()
-environ.Env.read_env(overwrite=True)  # .env 파일을 환경변수로 로딩합니다.
-
+load_dotenv()
 
 def embed_text(text: str) -> List[float]:
     client = openai.Client()
