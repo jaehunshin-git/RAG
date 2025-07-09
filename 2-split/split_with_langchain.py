@@ -1,17 +1,20 @@
+# 표준 라이브러리
 import sys
 from pathlib import Path
 from pprint import pprint
 from typing import List
 
-# 예전에는 `langchain` 라이브러리 기본에서 다양한 `Loader`를 지원했지만,
-# 요즘은 `langchain-community` 라이브러리 등 외부 라이브러리로 지원하는 경우가 많습니다.
+# 서드파티 라이브러리
 from langchain_community.document_loaders import TextLoader
 from langchain_core.documents import Document
-# `langchain` 라이브러리의 텍스트 분할 기능을 사용하기 위해
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+# 로컬 애플리케이션
+# 프로젝트 루트를 시스템 경로에 추가
 project_root = str(Path(__file__).resolve().parent.parent)
-sys.path.append(project_root)
+if project_root not in sys.path:
+    sys.path.append(project_root)
+
 from config import CAFE_MENU_FILE
 
 # 앞선 "파이썬 코드로 직접 문서 변환" 코드와 동일한 동작

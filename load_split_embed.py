@@ -1,8 +1,10 @@
-from typing import List, Dict
-from pprint import pprint
-from langchain_core.documents import Document
-import openai
+# 표준 라이브러리
+from typing import Dict, List
+
+# 서드파티 라이브러리
 import environ
+import openai
+from langchain_core.documents import Document
 
 env = environ.Env()
 environ.Env.read_env(overwrite=True)  # .env 파일을 환경변수로 로딩합니다.
