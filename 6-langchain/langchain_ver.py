@@ -21,12 +21,11 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 project_root = str(Path(__file__).resolve().parent.parent)
 if project_root not in sys.path:
     sys.path.append(project_root)
-
 from config import CAFE_MENU_FILE
 
 load_dotenv()
 
-faiss_folder_path = "faiss_index"
+faiss_folder_path = project_root / "6-langchain" / "data"/ "faiss_index"
 
 embedding = OpenAIEmbeddings(model="text-embedding-3-small")
 
@@ -60,7 +59,7 @@ def get_vector_store() -> VectorStore:
         uuids = [str(uuid4()) for _ in range(len(doc_list))]
         vector_store.add_documents(documents=doc_list, ids=uuids)
 
-        vector_store.save_local("faiss_index")
+        vector_store.save_local(faiss_folder_path)
     else:
         vector_store = FAISS.load_local(
             faiss_folder_path,
