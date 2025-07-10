@@ -32,9 +32,13 @@ embedding = OpenAIEmbeddings(model="text-embedding-3-small")
 
 def get_vector_store() -> VectorStore:
     if not os.path.exists(faiss_folder_path):
+        # 1단계: 문서 로딩
+        # TextLoader를 사용하여 텍스트 파일을 로드합니다.
         doc_list = TextLoader(file_path=CAFE_MENU_FILE, encoding="utf-8").load()
         print(f"loaded {len(doc_list)} documents")  # 1
 
+        # 2단계: 문서 분할
+        # RecursiveCharacterTextSplitter를 사용하여 문서를 작은 청크로 분할합니다.
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=140,
             chunk_overlap=0,
@@ -44,6 +48,9 @@ def get_vector_store() -> VectorStore:
         doc_list = text_splitter.split_documents(doc_list)
         print(f"split into {len(doc_list)} documents")  # 9
 
+        # 3단계: 임베딩 생성 및 4단계: 벡터 저장소 생성 및 저장
+        # OpenAIEmbeddings를 사용하여 문서 임베딩을 생성하고, FAISS 벡터 저장소를 초기화합니다.
+        # FAISS는 임베딩된 문서를 저장하고 효율적인 유사성 검색을 가능하게 합니다.
         dimension = len(embedding.embed_query("hello"))  # 1536
         # 차원수 = 1536
 
@@ -59,6 +66,7 @@ def get_vector_store() -> VectorStore:
         uuids = [str(uuid4()) for _ in range(len(doc_list))]
         vector_store.add_documents(documents=doc_list, ids=uuids)
 
+        # 생성된 벡터 저장소를 로컬 파일 시스템에 저장합니다.
         vector_store.save_local(faiss_folder_path)
     else:
         vector_store = FAISS.load_local(
@@ -91,6 +99,9 @@ def main():
     # ai_message = qa_chain.invoke(question)
     # print("[AI]", ai_message["result"]) # keys: "query", "result"
 
+    # 5단계: 검색 (Search)
+    # LangChain의 retriever 인터페이스를 통해 질문과 관련된 문서를 검색합니다.
+    # 검색된 문서는 LLM에 전달되어 답변 생성에 활용됩니다.
     llm = ChatOpenAI(model_name="gpt-4o-mini")
     retriever = vector_store.as_retriever()
     prompt_template = PromptTemplate(
