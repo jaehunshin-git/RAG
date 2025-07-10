@@ -2,12 +2,12 @@
 import pickle
 import sys
 from pathlib import Path
-from typing import List, cast
 from pprint import pprint
+from typing import List, cast
 
+import numpy as np
 # 서드파티 라이브러리
 import openai
-import numpy as np
 from dotenv import load_dotenv
 from langchain_community.utils.math import cosine_similarity
 from langchain_core.documents import Document
@@ -20,6 +20,7 @@ if project_root not in sys.path:
     sys.path.append(project_root)
 
 from config import CAFE_MENU_FILE
+from print_price import print_prices
 
 
 load_dotenv()
@@ -140,7 +141,7 @@ class VectorStore(list):
 
 
 def main():
-    vector_store_path = Path(project_root) / "4-store" / "data" / "vector_store.pickle"
+    vector_store_path = Path(project_root) / "5-search" / "data" / "vector_store.pickle"
 
     # 첫번째 실행에서는 vector_store.pickle 파일이 없으므로 load, split, make, save 순서로 데이터를 생성하고 저장합니다.
     if not vector_store_path.is_file():
@@ -182,8 +183,7 @@ def main():
         model="gpt-4o-mini",
         temperature=0,
     )
-    # TODO: print_prices 함수가 정의되지 않았습니다. 아래 코드를 사용하려면 함수를 정의해야 합니다.
-    # print_prices(res.usage.prompt_tokens, res.usage.completion_tokens)
+    print_prices(res.usage.prompt_tokens, res.usage.completion_tokens)
     ai_message = res.choices[0].message.content
 
     print("[AI]", ai_message)
