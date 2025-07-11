@@ -18,14 +18,14 @@ from langchain_openai import ChatOpenAI
 from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-project_root = str(Path(__file__).resolve().parent.parent)
-if project_root not in sys.path:
-    sys.path.append(project_root)
+project_root = Path(__file__).resolve().parent.parent
+if str(project_root) not in sys.path:
+    sys.path.append(str(project_root))
 from config import CAFE_MENU_FILE
 
 load_dotenv()
 
-faiss_folder_path = project_root / "6-langchain" / "data"/ "faiss_index"
+faiss_folder_path = project_root / "6-langchain" / "data" / "faiss_index"
 
 embedding = OpenAIEmbeddings(model="text-embedding-3-small")
 
